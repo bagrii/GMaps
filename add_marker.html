@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+       #map {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+       }
+    </style>
+  </head>
+  <body>
+    <a href="https://onethinglab.com/the-definitive-guide-to-google-maps-markers#marker-add">How to add marker</a>
+    <div id="map"></div>
+    <script>
+
+      function add_marker(gmap, coordinates, text) {
+        var marker = new google.maps.Marker({
+          position: coordinates,
+          map: gmap,
+          label: { text: text }
+          });
+
+        return marker;
+      }
+
+      function init_map() {
+        var places = {
+          'UA': {lat: 50.43333333, lng: 30.516667},
+          'DE': {lat: 52.51666667, lng: 13.4},
+          'GL': {lat: 64.18333333, lng: -51.75},
+          'JP': {lat: 35.68333333, lng: 139.75},
+          'MG': {lat: -18.91666667, lng: 47.516667}
+        };
+
+        var gmap = new google.maps.Map(document.getElementById('map'),
+          {
+            zoom: 2,
+            center: { lat: -25.363, lng: 131.044 }
+          });
+
+        for (var country in places) {
+          add_marker(gmap, places[country], country);
+        }
+      }
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=init_map"></script>
+  </body>
+</html>

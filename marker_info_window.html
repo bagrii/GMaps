@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        #map {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="https://onethinglab.wordpress.com/the-definitive-guide-to-google-maps-markers#marker-info-window">How to add info window to marker</a>
+    <div id="map"></div>
+    <script>
+        var gmap;
+        var info_window;
+
+        function add_marker(gmap, coordinates, text) {
+            var marker = new google.maps.Marker({
+                position: coordinates,
+                map: gmap,
+                label: { text: text }
+            });
+
+            return marker;
+        }
+
+        function init_map() {
+            var places = {
+                'UA': {
+                    'position': { lat: 50.43333333, lng: 30.516667 },
+                    'content': 'Your content here for UA'
+                },
+                'DE': {
+                    'position': { lat: 52.51666667, lng: 13.4 },
+                    'content': 'Your content here for DE'
+                },
+                'GL': {
+                    'position': { lat: 64.18333333, lng: -51.75 },
+                    'content': 'Your content here for GL'
+                },
+                'JP': {
+                    'position': { lat: 35.68333333, lng: 139.75 },
+                    'content': 'Your content here for JP'
+                },
+                'MG': {
+                    'position': { lat: -18.91666667, lng: 47.516667 },
+                    'content': 'Your content here for MG'
+                }
+            };
+
+            gmap = new google.maps.Map(document.getElementById('map'),
+                {
+                    zoom: 2,
+                    center: { lat: -25.363, lng: 131.044 }
+                });
+
+            info_window = new google.maps.InfoWindow();
+
+            for (var country in places) {
+                var marker = add_marker(gmap, places[country]['position'], country);
+                marker.countryInfo = places[country]['content'];
+                google.maps.event.addListener(marker, 'click', function () {
+                    info_window.setContent(this.countryInfo);
+                    info_window.open(gmap, this);
+                });
+            }
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=init_map"></script>
+</body>
+
+</html>

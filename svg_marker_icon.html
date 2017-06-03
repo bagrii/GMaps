@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        #map {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="https://onethinglab.wordpress.com/the-definitive-guide-to-google-maps-markers#marker-svg-icon">How to use SVG as Marker icon</a>
+    <div id="map"></div>
+    <script>
+        function add_marker(gmap, coordinates, text, scale, color) {
+            var marker = new google.maps.Marker({
+                position: coordinates,
+                map: gmap,
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: scale,
+                    strokeWeight: 3,
+                    fillColor: color,
+                    fillOpacity: 0.5,
+                    strokeColor: 'white'
+                },
+                label: {
+                    color: 'white',
+                    text: text,
+                    fontWeight: 'Bold'
+                }
+            });
+            return marker;
+        }
+
+        function init_map() {
+            var places = {
+                'UA': {
+                    'coordinates': { lat: 50.43333333, lng: 30.516667 },
+                    'population': '45M',
+                    'color': '#f47141',
+                    'scale': 24                
+                },
+                'DE': {
+                    'coordinates': { lat: 52.51666667, lng: 13.4 },
+                    'population': '81M',
+                    'color': '#f45841',
+                    'scale': 30
+                },
+                'GL': {                    
+                    'coordinates': { lat: 64.18333333, lng: -51.75 },
+                    'population': '56K',
+                    'color': '#f4be41',
+                    'scale': 20
+                },
+                'JP': {
+                    'coordinates': { lat: 35.68333333, lng: 139.75 },
+                    'population': '127M',
+                    'color': '#f44141',
+                    'scale': 35                
+                },
+                'MG': {
+                    'coordinates': { lat: -18.91666667, lng: 47.516667 },
+                    'population': '24M',
+                    'color': '#f47c41',
+                    'scale': 22
+                }
+            };
+
+            var gmap = new google.maps.Map(document.getElementById('map'),
+                {
+                    zoom: 2,
+                    center: { lat: -25.363, lng: 131.044 }
+                });
+
+            for (var country in places) {
+                add_marker(gmap, places[country]['coordinates'],
+                    places[country]['population'], places[country]['scale'],
+                    places[country]['color']);
+            }
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=init_map"></script>
+</body>
+
+</html>

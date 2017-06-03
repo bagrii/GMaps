@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        #map {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div><a href="https://onethinglab.wordpress.com/the-definitive-guide-to-google-maps-markers#marker-auto-center">How to auto center map on markers</a></div>
+    <div>
+        <center>
+            <button onclick="next(current_bucket, false)"><h4>Auto Center Next</h4></button>
+        </center>
+    </div>
+    <div id="map"></div>
+    <script>
+        var places = {
+            'JP': [{ lat: 35.652832, lng: 139.839478 },
+            { lat: 35.443707, lng: 139.638031 },
+            { lat: 42.923901, lng: 143.196106 },
+            { lat: 26.212313, lng: 127.679153 },
+            { lat: 26.359266, lng: 127.756744 }],
+            'US': [{ lat: 42.336983, lng: -83.273262 },
+            { lat: 34.704929, lng: -81.210251 },
+            { lat: 43.224194, lng: -86.235809 },
+            { lat: 34.426388, lng: -117.300880 },
+            { lat: 34.686787, lng: -118.154160 }],
+            'MG': [{ lat: -21.000000, lng: 48.150002 },
+            { lat: -16.916668, lng: 47.716667 },
+            { lat: -19.002846, lng: 46.460938 },
+            { lat: -18.948902, lng: 48.224426 },
+            { lat: -13.319158, lng: 48.185768 }]
+        };
+        // google maps instance
+        var gmap;
+        var current_bucket = 0;
+
+        function add_marker(gmap, coordinates, text) {
+            var marker = new google.maps.Marker({
+                position: coordinates,
+                map: gmap,
+                label: { text: text }
+            });
+
+            return marker;
+        }
+
+        function calculate_centroid(points) {
+            // calculate geometric centroid on list of points
+            // points: array of objects with lat and lng properties
+            var lat = 0;
+            var lng = 0;
+
+            points.forEach(pt => {
+                lat += pt.lat;
+                lng += pt.lng;
+            });
+
+            lat = lat / points.length;
+            lng = lng / points.length;
+
+            return { lat: lat, lng: lng };
+        }
+
+        function next(bucket, use_extend_bounds) {
+            var country = Object.keys(places)[current_bucket];
+            current_bucket++;
+            current_bucket %= Object.keys(places).length;
+            var center_point;
+            if (use_extend_bounds) {
+                var bounds = new google.maps.LatLngBounds();
+                places[country].forEach(place => bounds.extend(place));
+                center_point = bounds.getCenter();
+            } else {
+                center_point = calculate_centroid(places[country]);
+            }
+            gmap.setCenter(center_point);
+        }
+
+        function init_map() {
+            gmap = new google.maps.Map(document.getElementById('map'),
+                {
+                    zoom: 4,
+                    center: { lat: -25.363, lng: 131.044 }
+                });
+
+            for (var country in places) {
+                places[country].forEach(place => add_marker(gmap, place, country));
+            }
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=init_map"></script>
+</body>
+
+</html>
